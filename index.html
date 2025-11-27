@@ -13,6 +13,12 @@
         * {
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-user-drag: none;
         }
 
         :root {
@@ -42,6 +48,15 @@
             min-height: 100vh;
         }
 
+        img {
+            pointer-events: auto;
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+        }
+
         .app-container {
             max-width: 680px;
             margin: 0 auto;
@@ -55,6 +70,11 @@
             background: var(--bg-primary);
             border-bottom: 1px solid var(--border-color);
             padding: 16px 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .sticky-header.hidden {
+            transform: translateY(-100%);
         }
 
         .header-title {
@@ -82,6 +102,10 @@
             color: var(--text-primary);
             outline: none;
             transition: border-color 0.2s;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
+            user-select: text;
         }
 
         .search-input::placeholder {
@@ -225,7 +249,6 @@
             padding: 0px 5px;
             border-radius: 15px;
             font-weight: 500;
-
             text-transform: uppercase;
             background: var(--code-bg);
             color: var(--text-secondary);
@@ -337,10 +360,12 @@
             z-index: 100;
             background: rgba(0, 0, 0, 0.95);
             display: none;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             opacity: 0;
             transition: opacity 0.2s ease;
+            padding: 20px;
         }
 
         .lightbox.active {
@@ -348,11 +373,107 @@
             opacity: 1;
         }
 
+        .lightbox-header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 60px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 101;
+        }
+
+        .lightbox-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .lightbox-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 100%;
+            max-height: calc(100% - 140px);
+            margin-top: 60px;
+        }
+
+        .lightbox-image-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            flex: 1;
+            overflow: hidden;
+        }
+
         .lightbox img {
             max-width: 90%;
-            max-height: 90%;
+            max-height: 70vh;
             object-fit: contain;
             border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            z-index: 102;
+        }
+
+        .lightbox-nav:hover {
+            background: var(--hover-color);
+            border-color: var(--text-secondary);
+        }
+
+        .lightbox-nav.prev {
+            left: 10px;
+        }
+
+        .lightbox-nav.next {
+            right: 10px;
+        }
+
+        .lightbox-footer {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .lightbox-copy-btn {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            font-size: 14px;
+            font-weight: 500;
+            padding: 12px 24px;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .lightbox-copy-btn:hover {
+            background: var(--text-secondary);
         }
 
         .lightbox-close {
@@ -370,6 +491,7 @@
             cursor: pointer;
             color: var(--delete-color);
             transition: all 0.2s;
+            z-index: 102;
         }
 
         .lightbox-close:hover {
@@ -412,13 +534,53 @@
             opacity: 0.5;
         }
 
+        .scroll-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            z-index: 60;
+            opacity: 0;
+            pointer-events: none;
+            box-shadow: var(--shadow);
+        }
+
+        .scroll-btn.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .scroll-btn:hover {
+            background: var(--hover-color);
+            border-color: var(--text-secondary);
+        }
+
+        .scroll-btn svg {
+            transition: transform 0.3s ease;
+        }
+
+        .scroll-btn.down svg {
+            transform: rotate(180deg);
+        }
+
         @media (min-width: 768px) {
             .gallery-list {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-        .footer{
+
+        .footer {
             text-align: center;
             margin-bottom: 10px;
             font-size: 0.8rem;
@@ -427,13 +589,23 @@
             padding: 0px;
             box-sizing: border-box;
         }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
-<body>
+<body oncontextmenu="return false;" ondragstart="return false;">
 
     <div class="app-container">
-        <header class="sticky-header">
+        <header class="sticky-header" id="stickyHeader">
             <div class="header-title">Salist Gallery</div>
             <div class="search-wrapper">
                 <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -455,6 +627,10 @@
     </div>
 
     <div id="lightbox" class="lightbox">
+        <div class="lightbox-header">
+            <span id="lightboxTitle" class="lightbox-title"></span>
+            <span id="lightboxBadge" class="badge"></span>
+        </div>
         <button class="lightbox-close" onclick="closeLightbox()">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
@@ -462,8 +638,34 @@
                 <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
         </button>
-        <img id="lightboxImg" src="" alt="Fullscreen Preview">
+        <div class="lightbox-content">
+            <div class="lightbox-image-container">
+                <button class="lightbox-nav prev" onclick="navigateLightbox(-1)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                </button>
+                <img id="lightboxImg" src="" alt="Fullscreen Preview">
+                <button class="lightbox-nav next" onclick="navigateLightbox(1)">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="lightbox-footer">
+            <button id="lightboxCopyBtn" class="lightbox-copy-btn" onclick="copyLightboxPrompt()">Copy Prompt</button>
+        </div>
     </div>
+
+    <button id="scrollBtn" class="scroll-btn" onclick="scrollToDirection()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
 
     <div id="toast" class="toast">Copied to clipboard</div>
     <div class="footer">
@@ -473,12 +675,13 @@
         <span style="color:#0189ff;">Kate</span>
     </div>
     <div class="footer">© 2024-2025 Salist labs - by <span style="color:#fe0190">Elizaveta</span></div>
+
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
         const galleryData = [
-              {
+            {
                 "type": "editor",
                 "title": "Low-Light Portrait Retouch",
                 "prompt": "edit the image , Ultra-realistic low-light portrait of a young adult female. Preserve 100% exact face, skin, and hair from uploaded selfie—no alterations. Sitting on a gray/beige couch in a warm softly lit interior with geometric or wood-paneled wall behind. Wearing a white crop top and loose light-blue jeans; layered necklaces, bracelets, rings, and a large metallic watch. Long slender figure; thoughtful serious gaze looking off-frame, one hand lifted near face in reflective pose. Foreground includes part of a table with a small glass bottle (no cigarette pack). Maintain soft contrast, nocturnal mood, warm interior glow, cinematic and hyper-real finish.",
@@ -1528,7 +1731,7 @@
                 "tags": ["mirage", "future", "desert", "city", "illusion"],
                 "img": ""
             }
-            ];
+        ];
 
         const galleryEl = document.getElementById('gallery');
         const searchInput = document.getElementById('searchInput');
@@ -1536,12 +1739,90 @@
         const toast = document.getElementById('toast');
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxTitle = document.getElementById('lightboxTitle');
+        const lightboxBadge = document.getElementById('lightboxBadge');
+        const lightboxCopyBtn = document.getElementById('lightboxCopyBtn');
+        const stickyHeader = document.getElementById('stickyHeader');
+        const scrollBtn = document.getElementById('scrollBtn');
 
         let currentFilter = 'all';
+        let currentLightboxIndex = 0;
+        let filteredData = [];
+        let currentLightboxPrompt = '';
+        let lastScrollY = 0;
+        let scrollDirection = 'up';
+        let scrollTimeout = null;
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        // Disable copy/paste/select
+        document.addEventListener('copy', (e) => e.preventDefault());
+        document.addEventListener('cut', (e) => e.preventDefault());
+        document.addEventListener('paste', (e) => e.preventDefault());
+        document.addEventListener('selectstart', (e) => {
+            if (e.target.tagName !== 'INPUT') {
+                e.preventDefault();
+            }
+        });
+
+        // Scroll handling for header
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    handleScroll();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        function handleScroll() {
+            const currentScrollY = window.scrollY;
+
+            // Header hide/show
+            if (currentScrollY > lastScrollY && currentScrollY > 100) {
+                stickyHeader.classList.add('hidden');
+                scrollDirection = 'down';
+            } else {
+                stickyHeader.classList.remove('hidden');
+                scrollDirection = 'up';
+            }
+
+            // Scroll button
+            if (scrollDirection === 'down') {
+                scrollBtn.classList.add('down');
+            } else {
+                scrollBtn.classList.remove('down');
+            }
+
+            if (Math.abs(currentScrollY - lastScrollY) > 5) {
+                scrollBtn.classList.add('visible');
+
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    scrollBtn.classList.remove('visible');
+                }, 2000);
+            }
+
+            lastScrollY = currentScrollY;
+        }
+
+        function scrollToDirection() {
+            if (scrollBtn.classList.contains('down')) {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('light');
+            }
+        }
 
         function titleToFileName(title) {
             return './img/' + title + '.jpg';
         }
+
         function shuffleArray(array) {
             const shuffled = [...array];
             for (let i = shuffled.length - 1; i > 0; i--) {
@@ -1555,7 +1836,7 @@
             galleryEl.innerHTML = '';
             const term = searchTerm.toLowerCase();
 
-            let filtered = galleryData.filter(item => {
+            filteredData = galleryData.filter(item => {
                 const matchesType = filterType === 'all' || item.type === filterType;
                 const matchesSearch = item.title.toLowerCase().includes(term) ||
                     item.prompt.toLowerCase().includes(term) ||
@@ -1563,11 +1844,11 @@
                 return matchesType && matchesSearch;
             });
 
-            if (filterType === 'all') {
-                filtered = shuffleArray(filtered);
+            if (filterType === 'all' && !searchTerm) {
+                filteredData = shuffleArray(filteredData);
             }
 
-            if (filtered.length === 0) {
+            if (filteredData.length === 0) {
                 galleryEl.innerHTML = `
                     <div class="empty-state">
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1579,7 +1860,7 @@
                 return;
             }
 
-            filtered.forEach(item => {
+            filteredData.forEach((item, index) => {
                 const badgeClass = item.type === 'generator' ? 'badge-gen' : 'badge-edit';
                 const badgeText = item.type === 'generator' ? 'GEN' : 'EDIT';
                 const needsScroll = item.title.length > 15;
@@ -1590,7 +1871,7 @@
                 card.className = 'card';
                 card.innerHTML = `
                 <div class="card-header">
-                    <img src="${imgSrc}" class="card-preview" loading="lazy" onclick="openLightbox('${imgSrc}')" onerror="this.src='img/error.jpg'">
+                    <img src="${imgSrc}" class="card-preview" loading="lazy" onclick="openLightbox(${index})" onerror="this.src='img/error.jpg'">
                     <div class="card-info">
                         <div class="card-title-wrapper">
                             <div class="${titleClass}" data-text="${item.title}">${item.title}</div>
@@ -1648,14 +1929,61 @@
             });
         };
 
-        window.openLightbox = (src) => {
-                lightboxImg.src = src; 
-                lightbox.classList.add('active');
-                if (tg.BackButton) {
-                    tg.BackButton.show();
-                    tg.BackButton.onClick(closeLightbox);
+        window.openLightbox = (index) => {
+            currentLightboxIndex = index;
+            updateLightboxContent();
+            lightbox.classList.add('active');
+            if (tg.BackButton) {
+                tg.BackButton.show();
+                tg.BackButton.onClick(closeLightbox);
+            }
+        };
+
+        function updateLightboxContent() {
+            const item = filteredData[currentLightboxIndex];
+            if (!item) return;
+
+            const imgSrc = titleToFileName(item.title);
+            lightboxImg.src = imgSrc;
+            lightboxTitle.textContent = item.title;
+
+            const badgeClass = item.type === 'generator' ? 'badge-gen' : 'badge-edit';
+            const badgeText = item.type === 'generator' ? 'GEN' : 'EDIT';
+            lightboxBadge.className = `badge ${badgeClass}`;
+            lightboxBadge.textContent = badgeText;
+
+            currentLightboxPrompt = item.prompt;
+        }
+
+        window.navigateLightbox = (direction) => {
+            currentLightboxIndex += direction;
+
+            if (currentLightboxIndex < 0) {
+                currentLightboxIndex = filteredData.length - 1;
+            } else if (currentLightboxIndex >= filteredData.length) {
+                currentLightboxIndex = 0;
+            }
+
+            updateLightboxContent();
+
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.selectionChanged();
+            }
+        };
+
+        window.copyLightboxPrompt = () => {
+            navigator.clipboard.writeText(currentLightboxPrompt).then(() => {
+                if (tg.HapticFeedback) {
+                    tg.HapticFeedback.notificationOccurred('success');
                 }
-            };
+                showToast();
+                const btn = document.getElementById('lightboxCopyBtn');
+                const originalText = btn.innerText;
+                btn.innerText = "Copied!";
+                setTimeout(() => btn.innerText = originalText, 1500);
+            });
+        };
+
         window.closeLightbox = () => {
             lightbox.classList.remove('active');
             if (tg.BackButton) {
@@ -1664,8 +1992,44 @@
             }
         };
 
+        // Touch swipe for lightbox
+        lightbox.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        lightbox.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    navigateLightbox(1); // Swipe left - next
+                } else {
+                    navigateLightbox(-1); // Swipe right - prev
+                }
+            }
+        }
+
         lightbox.addEventListener('click', (e) => {
             if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        // Keyboard navigation for lightbox
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('active')) return;
+
+            if (e.key === 'ArrowLeft') {
+                navigateLightbox(-1);
+            } else if (e.key === 'ArrowRight') {
+                navigateLightbox(1);
+            } else if (e.key === 'Escape') {
                 closeLightbox();
             }
         });
