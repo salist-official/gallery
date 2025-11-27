@@ -369,23 +369,51 @@
             opacity: 1;
         }
 
-        .lightbox-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            z-index: 101;
-            transition: opacity 0.25s ease, transform 0.25s ease;
-            margin-bottom: 20px;
-        }
-
         .lightbox-title {
             font-size: 16px;
             font-weight: 600;
             color: var(--text-primary);
             white-space: nowrap;
+            display: inline-block;
+        }
+
+        .lightbox-title.scrolling {
+            display: inline-block;
+            padding-right: 50px;
+            animation: scrollTextContinuous 10s linear infinite;
+        }
+
+        .lightbox-title.scrolling::after {
+            content: attr(data-text);
+            padding-left: 50px;
+        }
+
+        @keyframes scrollTextContinuous {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .lightbox-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 101;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            margin-bottom: 20px;
             overflow: hidden;
-            text-overflow: ellipsis;
+            max-width: 90%;
+            position: relative;
+        }
+
+        .lightbox-title-wrapper {
+            overflow: hidden;
+            flex: 1;
+            display: flex;
+            align-items: center;
         }
 
         .lightbox-content {
@@ -691,8 +719,10 @@
         </button>
         <div class="lightbox-content">
             <div class="lightbox-header">
-                <span id="lightboxTitle" class="lightbox-title"></span>
                 <span id="lightboxBadge" class="badge"></span>
+                <div class="lightbox-title-wrapper">
+                    <span id="lightboxTitle" class="lightbox-title"></span>
+                </div>
             </div>
             <img id="lightboxImg" src="" alt="Fullscreen Preview">
             <div class="lightbox-footer">
@@ -1311,7 +1341,7 @@
             },
             {
                 "type": "editor",
-                "title": "Classic Urban Elegance - Indian Woman with Vintage Mercedes",
+                "title": "Indian Woman with Vintage Mercedes",
                 "prompt": "edit the image , Create a hyper-realistic portrait using the uploaded photo as strict reference, keeping the face 100% identical with no changes. A stylish Indian woman leans gracefully against a glossy vintage Mercedes convertible parked on a quiet tree-lined avenue. She wears a fitted black pencil skirt paired with a tucked-in silk ivory blouse and red stiletto heels. Accessories include a thin diamond chain, delicate bangles, and oversized black cat-eye sunglasses. Hair styled in soft retro curls. One hand rests on the car door while the other lightly holds a leather driving glove. Soft natural daylight highlights textures.",
                 "tags": ["vintage", "luxury", "female", "automotive", "editorial"],
                 "img": ""
@@ -1980,6 +2010,15 @@
             const imgSrc = titleToFileName(item.title);
             lightboxImg.src = imgSrc;
             lightboxTitle.textContent = item.title;
+
+            const needsScroll = item.title.length > 30;
+            if (needsScroll) {
+                lightboxTitle.classList.add('scrolling');
+                lightboxTitle.setAttribute('data-text', item.title);
+            } else {
+                lightboxTitle.classList.remove('scrolling');
+                lightboxTitle.removeAttribute('data-text');
+            }
 
             const badgeClass = item.type === 'generator' ? 'badge-gen' : 'badge-edit';
             const badgeText = item.type === 'generator' ? 'GEN' : 'EDIT';
