@@ -70,11 +70,7 @@
             background: var(--bg-primary);
             border-bottom: 1px solid var(--border-color);
             padding: 16px 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .sticky-header.hidden {
-            transform: translateY(-100%);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .header-title {
@@ -374,8 +370,8 @@
         }
 
         .lightbox-header {
-            position: absolute;
-            top: 20px;
+            justify-content: center;
+            align-items: center;            top: 20px;
             left: 20px;
             right: 60px;
             display: flex;
@@ -1779,17 +1775,11 @@
 
         function handleScroll() {
             const currentScrollY = window.scrollY;
-
-            // Header hide/show
-            if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                stickyHeader.classList.add('hidden');
+            if (currentScrollY > lastScrollY && currentScrollY > 30) {
                 scrollDirection = 'down';
             } else {
-                stickyHeader.classList.remove('hidden');
                 scrollDirection = 'up';
             }
-
-            // Scroll button
             if (scrollDirection === 'down') {
                 scrollBtn.classList.add('down');
             } else {
